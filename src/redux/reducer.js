@@ -30,7 +30,7 @@ const todo = (state = initialState, action) => {
             update(state)
             state[action.payload.column].map(async function (element, index) {
                 await axios({
-                    url: `http://localhost:5000/todo/${element._id}`,
+                    url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
                     method: 'PATCH',
                     data: {index: index},
                 })
@@ -53,7 +53,7 @@ const todo = (state = initialState, action) => {
             update(state)
             state[action.payload.sourceColumn].map(async function (element, index) {
                 await axios({
-                    url: `http://localhost:5000/todo/${element._id}`,
+                    url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
                     method: 'PATCH',
                     data: {index: index, column: element.column},
                 })
@@ -63,7 +63,7 @@ const todo = (state = initialState, action) => {
             })
             state[action.payload.destColumn].map(async function (element, index) {
                 await axios({
-                    url: `http://localhost:5000/todo/${element._id}`,
+                    url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
                     method: 'PATCH',
                     data: {index: index, column: element.column},
                 })
@@ -110,7 +110,7 @@ const todo = (state = initialState, action) => {
             update(state)
             state[action.payload.column].map(async function (element, index) {
                 await axios({
-                    url: `http://localhost:5000/todo/${element._id}`,
+                    url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
                     method: 'PATCH',
                     data: {index: index},
                 })

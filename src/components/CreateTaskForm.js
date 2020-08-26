@@ -23,8 +23,11 @@ function CreateTaskForm(props) {
     const addNewTask = async () => {
         console.log("taskPriority", taskPriority)
         console.log("column", statuses.indexOf(columnStatus))
+        console.log("index",props.store[statuses.indexOf(columnStatus)].length )
+        console.log("description",taskDescription )
+        console.log("priority",taskPriority )
         await axios({
-            url: 'http://localhost:5000/todo',
+            url: 'https://todo-server-viktor.herokuapp.com/todo',
             method: 'POST',
             data: {
                 name: taskTitle,

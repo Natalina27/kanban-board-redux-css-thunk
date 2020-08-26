@@ -3,7 +3,7 @@ import axios from 'axios';
 export function getList  () {
     return (dispatch) => {
         axios({
-            url: 'http://localhost:5000/todo',
+            url: 'https://todo-server-viktor.herokuapp.com/todo',
             method: 'GET'
         })
             .then(res => {

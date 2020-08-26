@@ -39,7 +39,7 @@ function EditTaskForm(props) {
     }
     const onSave = () => {
         axios({
-            url: `http://localhost:5000/todo/${_id}`,
+            url: `https://todo-server-viktor.herokuapp.com/todo/${_id}`,
             method: 'PATCH',
             data: {
                 name: taskTitle,

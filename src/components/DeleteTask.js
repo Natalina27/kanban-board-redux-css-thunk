@@ -13,7 +13,7 @@ function DeleteTask(props) {
     }
     const deleteItem = async () => {
         await axios({
-            url: `http://localhost:5000/todo/${element._id}`,
+            url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
             method: 'DELETE',
 
         })
