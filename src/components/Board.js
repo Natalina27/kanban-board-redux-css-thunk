@@ -10,6 +10,7 @@ import {getList} from "../redux/createAction";
 
 function Board(props) {
     console.log("hello")
+    const {getFullList} = props
     const onDragEnd = (result) => {
         const {source, destination} = result;
         if (!destination) {
@@ -35,9 +36,9 @@ function Board(props) {
         backgroundColor: isDraggingOver ? '#bee1ff' : '#fff'
     });
     useEffect(() => {
-        props.getFullList()
+        getFullList()
 
-    }, [props]);
+    }, [getFullList]);
 
 
     return (
