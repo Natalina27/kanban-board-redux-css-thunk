@@ -3,7 +3,7 @@ import axios from 'axios';
 export function getList  () {
     return (dispatch) => {
         axios({
-            url: 'https://pensive-tesla-f010b1.netlify.app/todo',
+            url: 'http://localhost:5000/todo',
             method: 'GET'
         })
             .then(res => {
