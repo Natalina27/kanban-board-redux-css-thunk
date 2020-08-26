@@ -30,7 +30,6 @@ function Column(props) {
     }
 
 
-
     return (
         <>
             <h3 className="color-bold-black font-weight-bold"> {props.status}</h3>
@@ -48,5 +47,7 @@ function Column(props) {
 const mapStateToProps = (state) => ({
     store: state
 });
-
-export default connect(mapStateToProps)(Column);
+const mapDispatchToProps = (dispatch) => ({
+    getFullList: () => dispatch(getList()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Column);

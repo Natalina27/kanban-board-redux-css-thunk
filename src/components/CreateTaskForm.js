@@ -13,15 +13,17 @@ function CreateTaskForm(props) {
     const [taskDescription, setTaskDescription] = useState('');
     const [taskPriority, setTaskPriority] = useState(priorities[0]);
     const [columnStatus, setColumnStatus] = useState(statuses[0]);
-    const onCancel= () => {
+    const onCancel = () => {
         setTaskTitle('');
         setTaskDescription('');
         setCreateTaskMode(false);
 
     }
-    console.log("priorities[taskPriority]",taskPriority)
-    const addNewTask = () => {
-        axios({
+
+    const addNewTask = async () => {
+        console.log("taskPriority", taskPriority)
+        console.log("column", statuses.indexOf(columnStatus))
+        await axios({
             url: 'http://localhost:5000/todo',
             method: 'POST',
             data: {
@@ -29,7 +31,8 @@ function CreateTaskForm(props) {
                 column: statuses.indexOf(columnStatus),
                 index: props.store[statuses.indexOf(columnStatus)].length,
                 description: taskDescription,
-                priority: priorities[taskPriority],
+                priority: taskPriority,
+                shrink: false,
                 done: false
             },
         })
@@ -60,7 +63,7 @@ function CreateTaskForm(props) {
                 </div>
                 <div className="form-group">
                     <label htmlFor="priority">Priority</label>
-                    <select id="priority" className="form-control" value={taskPriority}
+                    <select id="priority" className="form-control" defaultValue={taskPriority}
                             onChange={(e) => setTaskPriority(e.target.value)}
                     >
                         {
@@ -71,8 +74,8 @@ function CreateTaskForm(props) {
                     </select>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="priority">Priority</label>
-                    <select id="priority" className="form-control" value={columnStatus}
+                    <label htmlFor="priority">Status</label>
+                    <select id="priority" className="form-control" defaultValue={columnStatus}
                             onChange={(e) => setColumnStatus(e.target.value)}>
                         {
                             statuses.map((status) => {
@@ -97,4 +100,4 @@ const mapDispatchToProps = (dispatch) => ({
 
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(CreateTaskForm);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTaskForm);

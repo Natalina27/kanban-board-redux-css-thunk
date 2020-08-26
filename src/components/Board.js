@@ -11,7 +11,7 @@ import {getList} from "../redux/createAction";
 function Board(props) {
     console.log("hello")
     const onDragEnd = (result) => {
-        const {draggableId, source, destination} = result;
+        const {source, destination} = result;
         if (!destination) {
             return;
         }
