@@ -37,7 +37,7 @@ function Board(props) {
     useEffect(() => {
         props.getFullList()
 
-    }, []);
+    }, [props]);
 
 
     return (
