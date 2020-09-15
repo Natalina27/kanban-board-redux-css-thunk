@@ -7,8 +7,8 @@ import {connect} from "react-redux";
 import {getList} from "../redux/createAction";
 
 function EditTaskForm(props) {
-    const {isEditTaskMode, setEditTaskMode, element} = props;
-    const {_id, name, description, priority} = element;
+    const {isEditTaskMode, setEditTaskMode, element, index, columnIndex, shrink} = props;
+    const {id, name, description, priority} = element;
     const [taskTitle, setTaskTitle] = useState(name);
     const [taskDescription, setTaskDescription] = useState(description);
     const [taskPriority, setTaskPriority] = useState(priority);
@@ -39,13 +39,18 @@ function EditTaskForm(props) {
     }
     const onSave = () => {
         axios({
-            url: `https://todo-server-viktor.herokuapp.com/todo/${_id}`,
+            url: `https://kanban-server-dnd.herokuapp.com/todo/`,
             method: 'PATCH',
             data: {
+                id: id,
+                index: index,
+                column: 'column' + (columnIndex + 1),
                 name: taskTitle,
                 description: taskDescription,
-                priority: taskPriority,
-                done: taskDoneStatus === "Done"
+                done: taskDoneStatus==='Done',
+                shrink: shrink,
+                priority: taskPriority
+
             }
         })
             .then(res => {

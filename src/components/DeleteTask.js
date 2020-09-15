@@ -6,20 +6,24 @@ import {connect} from "react-redux";
 
 
 function DeleteTask(props) {
-    const {isDeleteTaskMode, setDeleteTaskMode, element} = props
-    const {name} = element
+    const {isDeleteTaskMode, setDeleteTaskMode, element, columnIndex} = props
+    const {name, id} = element
+
     const onHide = () => {
         setDeleteTaskMode(false);
     }
     const deleteItem = async () => {
         await axios({
-            url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
+            url: 'https://kanban-server-dnd.herokuapp.com/todo/delete',
             method: 'DELETE',
+            data:{
+                column:("column"+(columnIndex+1)),
+                id:id
+            }
 
         })
             .then(res => {
                 props.getFullList()
-                props.updateIndices(element._id, element.column)
             })
             .catch(function (error) {
                 console.log(error)
@@ -43,7 +47,6 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
     getFullList: () => dispatch(getList()),
-    updateIndices: (_id, column) => dispatch({type: 'UPDATE_INDICES_DELETE_ITEM', payload: {_id: _id, column: column}})
 
 });
 export default connect(mapStateToProps, mapDispatchToProps)(DeleteTask);

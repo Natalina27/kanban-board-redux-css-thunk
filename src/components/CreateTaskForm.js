@@ -5,6 +5,7 @@ import {statuses} from "../utils/priority";
 import {connect} from "react-redux";
 import axios from 'axios';
 import {getList} from "../redux/createAction";
+import {v4 as uuidv4} from 'uuid';
 
 
 function CreateTaskForm(props) {
@@ -21,18 +22,13 @@ function CreateTaskForm(props) {
     }
 
     const addNewTask = async () => {
-        console.log("taskPriority", taskPriority)
-        console.log("column", statuses.indexOf(columnStatus))
-        console.log("index",props.store[statuses.indexOf(columnStatus)].length )
-        console.log("description",taskDescription )
-        console.log("priority",taskPriority )
         await axios({
-            url: 'https://todo-server-viktor.herokuapp.com/todo',
+            url: 'https://kanban-server-dnd.herokuapp.com/todo/push',
             method: 'POST',
             data: {
+                column:"column"+(statuses.indexOf(columnStatus)+1),
+                id:uuidv4(),
                 name: taskTitle,
-                column: statuses.indexOf(columnStatus),
-                index: props.store[statuses.indexOf(columnStatus)].length,
                 description: taskDescription,
                 priority: taskPriority,
                 shrink: false,

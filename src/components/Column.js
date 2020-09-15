@@ -36,7 +36,7 @@ function Column(props) {
             <p className={setCSSPriorityColor()}>({props.store[columnIndex].length} of {totalLength})</p>
             {props.store[columnIndex].map((element, index) =>
                 (
-                    <Task key={uuidv4()} element={element} index={index}/>
+                    <Task key={uuidv4()} element={element} index={index} columnIndex={columnIndex}/>
                 )
             )}
 

@@ -8,36 +8,56 @@ const initialState = {
     3: [],
 
 };
+const deleteItem = async (id, columnNumber) => {
+    await axios({
+        url: "https://kanban-server-dnd.herokuapp.com/todo/delete",
+        method: 'DELETE',
+        data: {
+            id: id,
+            column: columnNumber,
 
+        },
+    })
+        .catch(function (error) {
+            console.log(error)
+        })
+
+}
+const insertItem = async (removed, columnNumber, indexToInsert) => {
+    await axios({
+        url: "https://kanban-server-dnd.herokuapp.com/todo/changePosition",
+        method: 'PATCH',
+        data: {
+            index: indexToInsert,
+            id: removed.id,
+            column: columnNumber,
+            name: removed.name,
+            done: removed.done,
+            description: removed.description,
+            priority: removed.priority,
+            shrink: removed.shrink
+        },
+    })
+        .catch(function (error) {
+            console.log(error)
+        })
+
+}
 const todo = (state = initialState, action) => {
-    const update = (obj) => {
-        for (let i = 0; i < 4; ++i) {
-            // eslint-disable-next-line array-callback-return
-            obj[i].map(function (el, index) {
-                el.index = index
-                el.column = i
-            })
-        }
-    }
     switch (action.type) {
         case 'DRAG_END_SAME_COLUMN':
-            console.log("Before Change", state[action.payload.column])
             console.log("Index to remove", action.payload.indexToRemove)
             console.log("Index to insert", action.payload.indexToInsert)
             const [removed] = state[action.payload.column].splice(action.payload.indexToRemove, 1)
             state[action.payload.column].splice(action.payload.indexToInsert, 0, removed)
-            console.log("After change", state[action.payload.column])
-            update(state)
-            state[action.payload.column].map(async function (element, index) {
-                await axios({
-                    url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
-                    method: 'PATCH',
-                    data: {index: index},
-                })
-                    .catch(function (error) {
-                        console.log(error)
-                    })
-            })
+            let columnNumber = Number(action.payload.column) + 1
+            console.log(columnNumber)
+            columnNumber = "column" + columnNumber
+            console.log("ID", removed.id)
+            console.log("COlumnNumber", columnNumber)
+            deleteItem(removed.id, columnNumber).then(r => console.log('Success'))
+            insertItem(removed, columnNumber, action.payload.indexToInsert).then(r => console.log('Success'))
+
             return {
                 ...state,
                 0: [...state["0"]],
@@ -49,29 +69,13 @@ const todo = (state = initialState, action) => {
 
             const [removedSource] = state[action.payload.sourceColumn].splice(action.payload.sourceIndex, 1)
             state[action.payload.destColumn].splice(action.payload.destIndex, 0, removedSource)
-            console.log("After change", state[action.payload.column])
-            update(state)
-            state[action.payload.sourceColumn].map(async function (element, index) {
-                await axios({
-                    url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
-                    method: 'PATCH',
-                    data: {index: index, column: element.column},
-                })
-                    .catch(function (error) {
-                        console.log(error)
-                    })
-            })
-            state[action.payload.destColumn].map(async function (element, index) {
-                await axios({
-                    url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
-                    method: 'PATCH',
-                    data: {index: index, column: element.column},
-                })
-                    .catch(function (error) {
-                        console.log(error)
-                    })
-            })
-
+            console.log("removedSource", removedSource)
+            let sourceColumn = Number(action.payload.sourceColumn) + 1
+            sourceColumn = "column" + sourceColumn
+            let destColumn = Number(action.payload.destColumn) + 1
+            destColumn = "column" + destColumn
+            deleteItem(removedSource.id, sourceColumn).then(r => console.log('Success'))
+            insertItem(removedSource, destColumn, action.payload.destIndex).then(r => console.log('Success'))
             return {
                 ...state,
                 0: [...state["0"]],
@@ -81,22 +85,16 @@ const todo = (state = initialState, action) => {
             }
         case 'GET_LIST_FROM_SERVER':
             for (let column = 0; column < 4; ++column) {
-                let columnArr = action.payload.filter(el => el.column === column)
+                console.log(action.payload)
 
-                columnArr.sort(function (a, b) {
-                    if (a.index > b.index) {
-                        return 1
-                    } else {
-                        return -1
-                    }
-                })
-                state[column] = columnArr
 
             }
-            update(state)
 
-            console.log("LIST FORM SERVER", state)
-
+            state['0'] = action.payload['0']['tasks']
+            state['1'] = action.payload['1']['tasks']
+            state['2'] = action.payload['2']['tasks']
+            state['3'] = action.payload['3']['tasks']
+            console.log(state)
             return {
                 ...state,
                 0: [...state["0"]],
@@ -104,27 +102,7 @@ const todo = (state = initialState, action) => {
                 2: [...state["2"]],
                 3: [...state["3"]],
             }
-        case "UPDATE_INDICES_DELETE_ITEM":
-            const indexToDelete = state[action.payload.column].findIndex(el => el._id === action.payload._id)
-            state[action.payload.column].splice(indexToDelete, 1)
-            update(state)
-            state[action.payload.column].map(async function (element, index) {
-                await axios({
-                    url: `https://todo-server-viktor.herokuapp.com/todo/${element._id}`,
-                    method: 'PATCH',
-                    data: {index: index},
-                })
-                    .catch(function (error) {
-                        console.log(error)
-                    })
-            })
-            return {
-                ...state,
-                0: [...state["0"]],
-                1: [...state["1"]],
-                2: [...state["2"]],
-                3: [...state["3"]],
-            }
+
 
 
         default:

@@ -1,9 +1,10 @@
 import axios from 'axios';
 
 export function getList  () {
+
     return (dispatch) => {
         axios({
-            url: 'https://todo-server-viktor.herokuapp.com/todo',
+            url: 'https://kanban-server-dnd.herokuapp.com/todo',
             method: 'GET'
         })
             .then(res => {

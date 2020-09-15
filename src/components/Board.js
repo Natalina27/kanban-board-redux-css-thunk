@@ -9,7 +9,6 @@ import {getList} from "../redux/createAction";
 
 
 function Board(props) {
-    console.log("hello")
     const {getFullList} = props
     const onDragEnd = (result) => {
         const {source, destination} = result;
@@ -24,10 +23,11 @@ function Board(props) {
         if (destination.droppableId === source.droppableId) {
             console.log("Index to remove", source.index)
             console.log("Index to insert", destination.index)
-
             props.dragSameColumn(destination.droppableId, source.index, destination.index)
 
         } else {
+            console.log("destination.droppableId", destination.droppableId)
+            console.log("source.droppableId", source.droppableId)
             props.dragDiffColumn(source.droppableId, destination.droppableId, destination.index, source.index)
 
         }

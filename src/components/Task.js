@@ -11,9 +11,8 @@ import {connect} from "react-redux";
 function Task(props) {
     const {index} = props
     const {element} = props
-    const {_id, name, description, priority, done, shrink} = element
-    console.log('ELEMENT',element)
-
+    const {columnIndex} = props
+    const {id, name, description, priority, done, shrink} = element
     const [isEditTaskMode, setEditTaskMode] = useState(false);
     const [isDeleteTaskMode, setDeleteTaskMode] = useState(false);
     const [descriptionCopy, setDescriptionCopy] = useState(description)
@@ -44,10 +43,18 @@ function Task(props) {
 
     const shortenText = () => {
         axios({
-            url: `https://todo-server-viktor.herokuapp.com/todo/${_id}`,
+            url: "https://kanban-server-dnd.herokuapp.com/todo/",
             method: 'PATCH',
             data: {
+                id: id,
+                index: index,
+                column: 'column' + (columnIndex + 1),
+                name: name,
+                description: description,
+                done: done,
                 shrink: !shrink,
+                priority: priority
+
             }
         })
             .then(res => {
@@ -71,12 +78,14 @@ function Task(props) {
 
     return (
         <>
-            <EditTaskForm isEditTaskMode={isEditTaskMode} setEditTaskMode={setEditTaskMode} element={element}/>
-            <DeleteTask isDeleteTaskMode={isDeleteTaskMode} setDeleteTaskMode={setDeleteTaskMode} element={element}/>
-            <Draggable key={uuidv4()} draggableId={_id} index={index}>
+            <EditTaskForm isEditTaskMode={isEditTaskMode} setEditTaskMode={setEditTaskMode} element={element}
+                          index={index} columnIndex={columnIndex} done={done} shrink={shrink}/>
+            <DeleteTask isDeleteTaskMode={isDeleteTaskMode} setDeleteTaskMode={setDeleteTaskMode} element={element}
+                        columnIndex={columnIndex}/>
+            <Draggable key={uuidv4()} draggableId={id} index={index}>
                 {provided => {
                     return (
-                        <div key={_id}
+                        <div key={id}
                              {...provided.draggableProps}
                              {...provided.dragHandleProps}
                              ref={provided.innerRef}
@@ -107,6 +116,7 @@ function Task(props) {
         </>
     );
 }
+
 const mapStateToProps = (state) => ({
     store: state
 });
