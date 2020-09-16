@@ -12,7 +12,8 @@ function Task(props) {
     const {index} = props
     const {element} = props
     const {columnIndex} = props
-    const {id, name, description, priority, done, shrink} = element
+    const {_id, name, description, priority, done, shrink} = element
+    console.log(element)
     const [isEditTaskMode, setEditTaskMode] = useState(false);
     const [isDeleteTaskMode, setDeleteTaskMode] = useState(false);
     const [descriptionCopy, setDescriptionCopy] = useState(description)
@@ -42,13 +43,13 @@ function Task(props) {
     }
 
     const shortenText = () => {
+        let column = columnIndex + 1
         axios({
-            url: "https://kanban-server-dnd.herokuapp.com/todo/",
+            url: "http://localhost:5000/todo/update",
             method: 'PATCH',
             data: {
-                id: id,
-                index: index,
-                column: 'column' + (columnIndex + 1),
+                id: _id,
+                column: column,
                 name: name,
                 description: description,
                 done: done,
@@ -82,10 +83,10 @@ function Task(props) {
                           index={index} columnIndex={columnIndex} done={done} shrink={shrink}/>
             <DeleteTask isDeleteTaskMode={isDeleteTaskMode} setDeleteTaskMode={setDeleteTaskMode} element={element}
                         columnIndex={columnIndex}/>
-            <Draggable key={uuidv4()} draggableId={id} index={index}>
+            <Draggable key={uuidv4()} draggableId={_id} index={index}>
                 {provided => {
                     return (
-                        <div key={id}
+                        <div key={_id}
                              {...provided.draggableProps}
                              {...provided.dragHandleProps}
                              ref={provided.innerRef}
@@ -101,7 +102,8 @@ function Task(props) {
                             <div className="text-secondary p-2 row">
                                 <div className="col-7 text-left">Priority:{priority}</div>
                                 <div className="col-5 text-right">
-                                    {shrink ? <i className="fa fa-compress rounded-sm icon" onClick={shortenText}/>
+                                    {shrink ?
+                                        <i className="fa fa-compress rounded-sm icon" onClick={shortenText}/>
                                         : <i className="fa fa-expand rounded-sm icon" onClick={shortenText}/>}
                                     <i className="fa fa-pencil rounded-sm icon" onClick={onEditTaskClick}/>
                                     <i className="fa fa-trash rounded-sm icon" onClick={onDeleteTaskClick}/>

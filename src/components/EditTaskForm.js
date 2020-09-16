@@ -8,7 +8,7 @@ import {getList} from "../redux/createAction";
 
 function EditTaskForm(props) {
     const {isEditTaskMode, setEditTaskMode, element, index, columnIndex, shrink} = props;
-    const {id, name, description, priority} = element;
+    const {_id, name, description, priority} = element;
     const [taskTitle, setTaskTitle] = useState(name);
     const [taskDescription, setTaskDescription] = useState(description);
     const [taskPriority, setTaskPriority] = useState(priority);
@@ -38,13 +38,14 @@ function EditTaskForm(props) {
         setEditTaskMode(false);
     }
     const onSave = () => {
+        let column = columnIndex + 1
         axios({
-            url: `https://kanban-server-dnd.herokuapp.com/todo/`,
+            url: "http://localhost:5000/todo/update",
             method: 'PATCH',
             data: {
-                id: id,
+                id: _id,
                 index: index,
-                column: 'column' + (columnIndex + 1),
+                column: column,
                 name: taskTitle,
                 description: taskDescription,
                 done: taskDoneStatus==='Done',

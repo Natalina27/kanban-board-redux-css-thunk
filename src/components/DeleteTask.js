@@ -7,18 +7,20 @@ import {connect} from "react-redux";
 
 function DeleteTask(props) {
     const {isDeleteTaskMode, setDeleteTaskMode, element, columnIndex} = props
-    const {name, id} = element
+    const {name, _id} = element
 
     const onHide = () => {
         setDeleteTaskMode(false);
     }
-    const deleteItem = async () => {
-        await axios({
-            url: 'https://kanban-server-dnd.herokuapp.com/todo/delete',
+    const deleteItem = () => {
+        console.log(_id)
+        let column = columnIndex + 1
+        axios({
+            url: "http://localhost:5000/todo/delete",
             method: 'DELETE',
-            data:{
-                column:("column"+(columnIndex+1)),
-                id:id
+            data: {
+                column: column,
+                id: _id
             }
 
         })

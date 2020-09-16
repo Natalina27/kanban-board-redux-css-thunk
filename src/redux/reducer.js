@@ -8,13 +8,14 @@ const initialState = {
     3: [],
 
 };
-const deleteItem = async (id, columnNumber) => {
-    await axios({
-        url: "https://kanban-server-dnd.herokuapp.com/todo/delete",
-        method: 'DELETE',
+const sameColumn = (id, columnNumber, destinationIndex) => {
+    axios({
+        url: "http://localhost:5000/order/sameColumn",
+        method: 'PATCH',
         data: {
             id: id,
             column: columnNumber,
+            destination: destinationIndex
 
         },
     })
@@ -23,19 +24,15 @@ const deleteItem = async (id, columnNumber) => {
         })
 
 }
-const insertItem = async (removed, columnNumber, indexToInsert) => {
-    await axios({
-        url: "https://kanban-server-dnd.herokuapp.com/todo/changePosition",
+const differentColumn = (id, destinationIndex, columnDestination, columnSource) => {
+    axios({
+        url: "http://localhost:5000/order/differentColumn",
         method: 'PATCH',
         data: {
-            index: indexToInsert,
-            id: removed.id,
-            column: columnNumber,
-            name: removed.name,
-            done: removed.done,
-            description: removed.description,
-            priority: removed.priority,
-            shrink: removed.shrink
+            id: id,
+            destination: destinationIndex,
+            columnDestination: columnDestination,
+            columnSource: columnSource
         },
     })
         .catch(function (error) {
@@ -51,12 +48,12 @@ const todo = (state = initialState, action) => {
             const [removed] = state[action.payload.column].splice(action.payload.indexToRemove, 1)
             state[action.payload.column].splice(action.payload.indexToInsert, 0, removed)
             let columnNumber = Number(action.payload.column) + 1
-            console.log(columnNumber)
-            columnNumber = "column" + columnNumber
-            console.log("ID", removed.id)
+
+            console.log("ID", removed._id)
             console.log("COlumnNumber", columnNumber)
-            deleteItem(removed.id, columnNumber).then(r => console.log('Success'))
-            insertItem(removed, columnNumber, action.payload.indexToInsert).then(r => console.log('Success'))
+            // deleteItem(removed.id, columnNumber).then(r => console.log('Success'))
+            // insertItem(removed, columnNumber, action.payload.indexToInsert).then(r => console.log('Success'))
+            sameColumn(removed._id, columnNumber, action.payload.indexToInsert)
 
             return {
                 ...state,
@@ -70,12 +67,9 @@ const todo = (state = initialState, action) => {
             const [removedSource] = state[action.payload.sourceColumn].splice(action.payload.sourceIndex, 1)
             state[action.payload.destColumn].splice(action.payload.destIndex, 0, removedSource)
             console.log("removedSource", removedSource)
-            let sourceColumn = Number(action.payload.sourceColumn) + 1
-            sourceColumn = "column" + sourceColumn
-            let destColumn = Number(action.payload.destColumn) + 1
-            destColumn = "column" + destColumn
-            deleteItem(removedSource.id, sourceColumn).then(r => console.log('Success'))
-            insertItem(removedSource, destColumn, action.payload.destIndex).then(r => console.log('Success'))
+
+
+            differentColumn(removedSource._id, action.payload.destIndex, Number(action.payload.destColumn) + 1, Number(action.payload.sourceColumn) + 1)
             return {
                 ...state,
                 0: [...state["0"]],
@@ -84,17 +78,21 @@ const todo = (state = initialState, action) => {
                 3: [...state["3"]],
             }
         case 'GET_LIST_FROM_SERVER':
+            let tasks = action.payload[0]
+            let order = action.payload[1]
+            console.log("ORDER", order)
             for (let column = 0; column < 4; ++column) {
-                console.log(action.payload)
-
+                let currColumn = order[column].order
+                let currResult = []
+                currColumn.map(function (element) {
+                    let currElem = tasks.find(el => el._id === element._id)
+                    console.log(currElem)
+                    currResult.push(currElem)
+                })
+                state[column] = currResult
 
             }
-
-            state['0'] = action.payload['0']['tasks']
-            state['1'] = action.payload['1']['tasks']
-            state['2'] = action.payload['2']['tasks']
-            state['3'] = action.payload['3']['tasks']
-            console.log(state)
+            console.log("STATE", state)
             return {
                 ...state,
                 0: [...state["0"]],
@@ -102,7 +100,6 @@ const todo = (state = initialState, action) => {
                 2: [...state["2"]],
                 3: [...state["3"]],
             }
-
 
 
         default:

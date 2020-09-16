@@ -4,7 +4,7 @@ export function getList  () {
 
     return (dispatch) => {
         axios({
-            url: 'https://kanban-server-dnd.herokuapp.com/todo',
+            url: 'http://localhost:5000/todo/getAll',
             method: 'GET'
         })
             .then(res => {

@@ -23,11 +23,10 @@ function CreateTaskForm(props) {
 
     const addNewTask = async () => {
         await axios({
-            url: 'https://kanban-server-dnd.herokuapp.com/todo/push',
+            url: 'http://localhost:5000/todo/create',
             method: 'POST',
             data: {
-                column:"column"+(statuses.indexOf(columnStatus)+1),
-                id:uuidv4(),
+                column:(statuses.indexOf(columnStatus)+1),
                 name: taskTitle,
                 description: taskDescription,
                 priority: taskPriority,
