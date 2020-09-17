@@ -45,7 +45,7 @@ function Task(props) {
     const shortenText = () => {
         let column = columnIndex + 1
         axios({
-            url: "http://localhost:5000/todo/update",
+            url: "https://kanban-board-server-dnd.herokuapp.com/todo/update",
             method: 'PATCH',
             data: {
                 id: _id,

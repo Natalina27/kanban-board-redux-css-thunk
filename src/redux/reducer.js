@@ -10,7 +10,7 @@ const initialState = {
 };
 const sameColumn = (id, columnNumber, destinationIndex) => {
     axios({
-        url: "http://localhost:5000/order/sameColumn",
+        url: "https://kanban-board-server-dnd.herokuapp.com/order/sameColumn",
         method: 'PATCH',
         data: {
             id: id,
@@ -26,7 +26,7 @@ const sameColumn = (id, columnNumber, destinationIndex) => {
 }
 const differentColumn = (id, destinationIndex, columnDestination, columnSource) => {
     axios({
-        url: "http://localhost:5000/order/differentColumn",
+        url: "https://kanban-board-server-dnd.herokuapp.com/order/differentColumn",
         method: 'PATCH',
         data: {
             id: id,

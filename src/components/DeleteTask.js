@@ -16,7 +16,7 @@ function DeleteTask(props) {
         console.log(_id)
         let column = columnIndex + 1
         axios({
-            url: "http://localhost:5000/todo/delete",
+            url: "https://kanban-board-server-dnd.herokuapp.com/todo/delete",
             method: 'DELETE',
             data: {
                 column: column,
