@@ -49,8 +49,8 @@ const todo = (state = initialState, action) => {
             state[action.payload.column].splice(action.payload.indexToInsert, 0, removed)
             let columnNumber = Number(action.payload.column) + 1
 
-            console.log("ID", removed._id)
-            console.log("COlumnNumber", columnNumber)
+
+
             // deleteItem(removed.id, columnNumber).then(r => console.log('Success'))
             // insertItem(removed, columnNumber, action.payload.indexToInsert).then(r => console.log('Success'))
             sameColumn(removed._id, columnNumber, action.payload.indexToInsert)
@@ -86,8 +86,8 @@ const todo = (state = initialState, action) => {
                 let currResult = []
                 currColumn.map(function (element) {
                     let currElem = tasks.find(el => el._id === element._id)
-                    console.log(currElem)
                     currResult.push(currElem)
+                    return null
                 })
                 state[column] = currResult
 

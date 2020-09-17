@@ -5,7 +5,6 @@ import {statuses} from "../utils/priority";
 import {connect} from "react-redux";
 import axios from 'axios';
 import {getList} from "../redux/createAction";
-import {v4 as uuidv4} from 'uuid';
 
 
 function CreateTaskForm(props) {
